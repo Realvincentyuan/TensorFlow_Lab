@@ -1,4 +1,4 @@
-# Image classification with Data augmentation, rescaling, convolutional layer, pooling layer, drop out etc.
+# Build Resnet from scratch etc.
 # =============================================
 # API doc from TensorFlow Org: https://www.tensorflow.org/api_docs/python/tf/keras/layers/ReLU
 # Reference of convolutional layer, pooling layer can be found at《Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow》- Chapter 14
