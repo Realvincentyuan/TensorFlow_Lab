@@ -4,6 +4,6 @@
 - [x]  Build and train models to process real-world image datasets.
 - [x]  Understand how to use convolutions to improve your neural network.
 - [x]  Use real-world images in different shapes and sizes.
-- [ ]  Use image augmentation to prevent overfitting.
-- [ ]  Use ImageDataGenerator.
-- [ ]  Understand how ImageDataGenerator labels images based on the directory structure.
+- [x]  Use image augmentation to prevent overfitting.
+- [x]  Use ImageDataGenerator.
+- [x]  Understand how ImageDataGenerator labels images based on the directory structure.
