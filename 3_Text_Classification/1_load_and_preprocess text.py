@@ -40,11 +40,15 @@ Original file is located at
 
 This tutorial demonstrates two ways to load and preprocess text.
 
-- First, you will use Keras utilities and preprocessing layers. These include `tf.keras.utils.text_dataset_from_directory` to turn data into a `tf.data.Dataset` and `tf.keras.layers.TextVectorization` for data standardization, tokenization, and vectorization. If you are new to TensorFlow, you should start with these.
-- Then, you will use lower-level utilities like `tf.data.TextLineDataset` to load text files, and [TensorFlow Text](https://www.tensorflow.org/text) APIs, such as `text.UnicodeScriptTokenizer` and `text.case_fold_utf8`, to preprocess the data for finer-grain control.
-"""
+- First, you will use Keras utilities and preprocessing layers. 
+These include `tf.keras.utils.text_dataset_from_directory` to turn data into a `tf.data.Dataset` and `tf.keras.layers.TextVectorization` for data standardization, tokenization, and vectorization. 
+If you are new to TensorFlow, you should start with these.
+- Then, you will use lower-level utilities like `tf.data.TextLineDataset` to load text files, 
+and [TensorFlow Text](https://www.tensorflow.org/text) APIs, such as `text.UnicodeScriptTokenizer` and `text.case_fold_utf8`, to preprocess the data for finer-grain control.
 
 !pip install "tensorflow-text==2.8.*"
+
+"""
 
 import collections
 import pathlib
@@ -199,7 +203,7 @@ binary_vectorize_layer = TextVectorization(
     max_tokens=VOCAB_SIZE,
     output_mode='binary')
 
-"""For the `'int'` mode, in addition to maximum vocabulary size, you need to set an explicit maximum sequence length (`MAX_SEQUENCE_LENGTH`), which will cause the layer to pad or truncate sequences to exactly `output_sequence_length` values:"""
+"""For the `'int'` mode, in addition to maxpyimum vocabulary size, you need to set an explicit maximum sequence length (`MAX_SEQUENCE_LENGTH`), which will cause the layer to pad or truncate sequences to exactly `output_sequence_length` values:"""
 
 MAX_SEQUENCE_LENGTH = 250
 
