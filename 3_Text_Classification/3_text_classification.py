@@ -16,11 +16,13 @@ Original file is located at
 
 !pip install "tensorflow-text==2.8.*"
 
+
 import tensorflow as tf
 from tensorflow.keras import layers
 from tensorflow.keras import losses
 from tensorflow.keras import utils
 from tensorflow.keras.layers import TextVectorization
+
 import tensorflow_datasets as tfds
 import tensorflow_text as tf_text
 
@@ -71,7 +73,7 @@ for data, label in  train_ds.take(1):
   print('Label:', label.numpy())
   break
 
-"""## Formatting texts with regex"""
+"""## Formattting texts with regex"""
 
 str_regex_pattern = [("[^A-Za-z0-9(),!?\'\`]", " "),("\'s", " \'s",) ,("\'ve", " \'ve"),("n\'t", " n\'t"),("\'re", " \'re"),("\'d", " \'d")
 ,("\'ll", " \'ll"),(",", " , "),("!", " ! "),("\(", " \( "),("\)", " \) "),("\?", " \? "),("\s{2,}", " ")]
@@ -183,7 +185,29 @@ for token, label in train_ds.take(1):
   print('Token', token[2].shape)
   print('Lablel', label[1])
 
-"""# Modeling"""
+"""# Download and process test set"""
+
+# Test set.
+test_ds = tfds.load(
+    'imdb_reviews',
+    split='test',
+    # batch_size=BATCH_SIZE,
+    shuffle_files=True,
+    as_supervised=True)
+
+test_ds = test_ds.map(lambda text, label: (tf_text.case_fold_utf8(text), label))
+
+for pattern, rewrite in str_regex_pattern:
+  test_ds = test_ds.map(lambda text, label: (tf.strings.regex_replace(text, pattern=pattern, rewrite=rewrite), label))
+
+test_ds = test_ds.map(text_index_lookup)
+test_ds = configure_dataset(test_ds)
+test_ds = test_ds.padded_batch(BATCH_SIZE  )
+
+"""# Modeling - CNN
+
+with sequential API
+"""
 
 vocab_size += 2 # 0 for padding and 1 for oov token
 
@@ -192,7 +216,7 @@ vocab_size
 """## Create models"""
 
 def create_model(vocab_size, num_labels, dropout_rate):
-    model = tf.keras.Sequential([
+  model = tf.keras.Sequential([
       tf.keras.layers.Embedding(vocab_size, 128, mask_zero=True),
 
       tf.keras.layers.Conv1D(32, 3, padding="valid", activation="relu", strides=1),
@@ -208,7 +232,7 @@ def create_model(vocab_size, num_labels, dropout_rate):
 
       tf.keras.layers.Dense(num_labels)
   ])
-    return model
+  return model
 
 tf.keras.backend.clear_session()
 model = create_model(vocab_size=vocab_size, num_labels=2, dropout_rate=0.5)
@@ -226,27 +250,6 @@ model.summary()
 early_stopping = tf.keras.callbacks.EarlyStopping(patience=10)
 epochs = 100
 history = model.fit(x=train_ds, validation_data=val_ds,epochs=epochs, callbacks=[early_stopping])
-
-"""## Download and process test set"""
-
-# Test set.
-test_ds = tfds.load(
-    'imdb_reviews',
-    split='test',
-    # batch_size=BATCH_SIZE,
-    shuffle_files=True,
-    as_supervised=True)
-
-test_ds.cardinality().numpy()
-
-test_ds = test_ds.map(lambda text, label: (tf_text.case_fold_utf8(text), label))
-
-for pattern, rewrite in str_regex_pattern:
-  test_ds = test_ds.map(lambda text, label: (tf.strings.regex_replace(text, pattern=pattern, rewrite=rewrite), label))
-
-test_ds = test_ds.map(text_index_lookup)
-test_ds = configure_dataset(test_ds)
-test_ds = test_ds.padded_batch(BATCH_SIZE  )
 
 """## Evaluation on the test set"""
 
@@ -281,3 +284,64 @@ plt.legend(loc='upper right')
 plt.title('Training and Validation Loss')
 plt.show()
 
+"""# Modeling - LSTM
+
+Using functional API
+"""
+
+dropout_rate = 0.5
+num_labels = 2
+
+input = tf.keras.layers.Input([None] )
+x = tf.keras.layers.Embedding(
+        input_dim=vocab_size,
+        output_dim=128,
+        # Use masking to handle the variable sequence lengths
+        mask_zero=True)(input)
+
+x = tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(64))(x)
+x = tf.keras.layers.Dense(64, activation='relu')(x)
+x = tf.keras.layers.Dropout(dropout_rate)(x)
+output = tf.keras.layers.Dense(num_labels)(x)
+
+lstm_model = tf.keras.Model(inputs=input, outputs=output, name="text_lstm_model")
+
+lstm_model.summary()
+
+loss = losses.SparseCategoricalCrossentropy(from_logits=True)
+optimizer = tf.keras.optimizers.SGD(learning_rate=0.01, momentum=0.9)
+
+lstm_model.compile(loss=loss, optimizer=optimizer, metrics='accuracy')
+
+early_stopping = tf.keras.callbacks.EarlyStopping(patience=10)
+epochs = 100
+history_2 = lstm_model.fit(x=train_ds, validation_data=val_ds,epochs=epochs, callbacks=[early_stopping])
+
+# visualize model results
+
+acc = history_2.history['accuracy']
+val_acc = history_2.history['val_accuracy']
+
+loss = history_2.history['loss']
+val_loss = history_2.history['val_loss']
+
+epochs_range = range(24)
+
+plt.figure(figsize=(16, 8))
+plt.subplot(1, 2, 1)
+plt.plot(epochs_range, acc, label='Training Accuracy')
+plt.plot(epochs_range, val_acc, label='Validation Accuracy')
+plt.legend(loc='lower right')
+plt.title('Training and Validation Accuracy')
+
+plt.subplot(1, 2, 2)
+plt.plot(epochs_range, loss, label='Training Loss')
+plt.plot(epochs_range, val_loss, label='Validation Loss')
+plt.legend(loc='upper right')
+plt.title('Training and Validation Loss')
+plt.show()
+
+loss, accuracy = lstm_model.evaluate(test_ds)
+
+print("Loss: ", loss)
+print("Accuracy: {:2.2%}".format(accuracy))
