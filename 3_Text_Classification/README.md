@@ -8,4 +8,4 @@
 - [x]  Use LSTMs in your model to classify text for either binary or multi-class categorization.
 - [x]  Add RNN and GRU layers to your model.
 - [x]  Use RNNs, LSTMs, GRUs and CNNs in models that work with text.
-- [ ]  Train LSTMs on existing test to generate text (such as songs and poetry).
+- [x]  Train LSTMs on existing test to generate text (such as songs and poetry).
