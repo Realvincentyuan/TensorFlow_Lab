@@ -1,2 +1,2 @@
-# TensorFlow_Certificate
-Code repo for TensorFlow Dev Certificate
+# TensorFlow_Lab
+Code repo for TensorFlow Dev
