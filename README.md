@@ -15,12 +15,14 @@ Code repo for TensorFlow development.
 
 # Online courses of TensorFlow
 
-- TensorFlow MOOC `Chinese courses`: https://www.icourse163.org/learn/youdao-1460578162?tid=1461280442#/learn/content
-- Zero to mastery TensorFlow course: https://dbourke.link/ZTMTFcourse
-- Udacity course - Intro to TensorFlow for Deep Learning: https://www.udacity.com/course/intro-to-tensorflow-for-deep-learning--ud187
+These are systematic courses, it is highly recommended to follow the course and practice along with it! Do not simply watching!
+
+- [TensorFlow MOOC Chinese courses](https://www.icourse163.org/learn/youdao-1460578162?tid=1461280442#/learn/content)
+- [Zero to mastery TensorFlow course](https://dbourke.link/ZTMTFcourse)
+- [Udacity course - Intro to TensorFlow for Deep Learning](https://www.udacity.com/course/intro-to-tensorflow-for-deep-learning--ud187)
 
 # Reference
 
 Below links are helpful for TensorFlow development:
-- Hands-on Machine Learning with Scikit-Learn, Keras and TensorFlow: https://github.com/ageron/handson-ml2
-- TensorFlow core tutorial: https://www.tensorflow.org/tutorials
+- [Hands-on Machine Learning with Scikit-Learn, Keras and TensorFlow](https://github.com/ageron/handson-ml2)
+- [TensorFlow core tutorial](https://www.tensorflow.org/tutorials)
