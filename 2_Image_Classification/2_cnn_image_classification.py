@@ -1,6 +1,6 @@
 # Image classification with Data augmentation, rescaling, convolutional layer, pooling layer, drop out etc.
 # =============================================
-# Sample code mostly from TensorFlow Org:https://www.tensorflow.org/tutorials/images/classification
+# Sample code mostly from TensorFlow Org: https://www.tensorflow.org/tutorials/images/classification
 # Reference of convolutional layer, pooling layer can be found at《Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow》- Chapter 14
 
 # Dependencies
