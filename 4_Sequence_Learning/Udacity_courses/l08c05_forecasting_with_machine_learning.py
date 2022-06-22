@@ -126,6 +126,8 @@ model.compile(loss=keras.losses.Huber(),
               metrics=["mae"])
 model.fit(train_set, epochs=100, validation_data=valid_set)
 
+
+## Finding the optimal learning rate using the learning rate scheduler
 keras.backend.clear_session()
 tf.random.set_seed(42)
 np.random.seed(42)
@@ -137,6 +139,7 @@ model = keras.models.Sequential([
   keras.layers.Dense(1, input_shape=[window_size])
 ])
 
+### Learning rate scheduler
 lr_schedule = keras.callbacks.LearningRateScheduler(
     lambda epoch: 1e-6 * 10**(epoch / 30))
 optimizer = keras.optimizers.SGD(lr=1e-6, momentum=0.9)
@@ -152,6 +155,8 @@ keras.backend.clear_session()
 tf.random.set_seed(42)
 np.random.seed(42)
 
+
+## Using early stopping to avoid overfitting
 window_size = 30
 train_set = window_dataset(x_train, window_size)
 valid_set = window_dataset(x_valid, window_size)
@@ -168,6 +173,8 @@ model.fit(train_set, epochs=500,
           validation_data=valid_set,
           callbacks=[early_stopping])
 
+
+## Model forecast
 def model_forecast(model, series, window_size):
     ds = tf.data.Dataset.from_tensor_slices(series)
     ds = ds.window(window_size, shift=1, drop_remainder=True)
@@ -201,6 +208,7 @@ model = keras.models.Sequential([
   keras.layers.Dense(1)
 ])
 
+### Learning rate scheduler
 lr_schedule = keras.callbacks.LearningRateScheduler(
     lambda epoch: 1e-7 * 10**(epoch / 20))
 optimizer = keras.optimizers.SGD(lr=1e-7, momentum=0.9)
